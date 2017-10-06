@@ -3,8 +3,7 @@
   "version": "2.3.0",
   "main": [
     "dist/owl.carousel.js",
-    "dist/assets/owl.carousel.css",
-    "dist/assets/owl.theme.default.css"
+    "dist/assets/owl.carousel.css"
   ],
   "ignore": [],
   "dependencies": {
