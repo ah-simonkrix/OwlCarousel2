@@ -330,12 +330,39 @@
 
 			repeat /= 2;
 
+			console.log('items:', items);
+
+			var cloneWithClickHandlers = function(original) {
+				var clone = original.clone(true, true).addClass('cloned');
+				//clone.children().click(function() { console.log('you clicked the clone'); });
+				return clone;
+			};
+
 			while (repeat > 0) {
+
 				// Switch to only using appended clones
 				clones.push(this.normalize(clones.length / 2, true));
-				$(items[clones[clones.length - 1]][0]).clone(true).addClass('cloned').appendTo(this.$stage);
-                clones.push(this.normalize(items.length - 1 - (clones.length - 1) / 2, true));
-				$(items[clones[clones.length - 1]][0]).clone(true).addClass('cloned').prependTo(this.$stage);
+				var original = $(items[clones[clones.length - 1]][0]);
+				var clone = original.clone(true, true);
+				clone.children().click(original.children().first().get(0).onclick);
+				clone.addClass('cloned');
+				clone.appendTo(this.$stage);
+				//cloneWithClickHandlers($(items[clones[clones.length - 1]][0])).appendTo(this.$stage);
+
+				clones.push(this.normalize(items.length - 1 - (clones.length - 1) / 2, true));
+				original = $(items[clones[clones.length - 1]][0]);
+				//console.log('tp1', original.children());
+				clone = original.clone(true, true);
+				//console.log('tp2', clone.children());
+
+				clone.addClass('cloned');
+				//clone.children().click(function() { console.log('you clicked the clone'); });
+				clone.children().click(original.children().first().get(0).onclick);
+  			clone.prependTo(this.$stage);
+
+				//$(items[clones[clones.length - 1]][0]).clone(true).addClass('cloned').prependTo(this.$stage);
+				//cloneWithClickHandlers($(items[clones[clones.length - 1]][0])).appendTo(this.$stage);
+
 				repeat -= 1;
 			}
 			this._clones = clones;
@@ -1284,6 +1311,8 @@
 		this.$stage.empty();
 		this._items = [];
 
+		console.log('replacing current content', content);
+
 		if (content) {
 			content = (content instanceof jQuery) ? content : $(content);
 		}
@@ -1315,6 +1344,7 @@
 	 */
 	Owl.prototype.add = function(content, position) {
 		var current = this.relative(this._current);
+		console.log('adding content:', content);
 
 		position = position === undefined ? this._items.length : this.normalize(position, true);
 		content = content instanceof jQuery ? content : $(content);
@@ -1322,6 +1352,7 @@
 		this.trigger('add', { content: content, position: position });
 
 		content = this.prepare(content);
+
 
 		if (this._items.length === 0 || position === this._items.length) {
 			this._items.length === 0 && this.$stage.append(content);
@@ -1603,6 +1634,7 @@
 	 */
 	Owl.prototype.pointer = function(event) {
 		var result = { x: null, y: null };
+
 
 		event = event.originalEvent || event || window.event;
 
