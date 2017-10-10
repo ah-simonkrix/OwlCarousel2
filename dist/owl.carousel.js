@@ -335,12 +335,20 @@
 
 			repeat /= 2;
 
+			var cloneWithClickHandlers = function(original) {
+				var clone = original.clone(true, true).addClass('cloned');
+				clone.children().first().click(original.children().first().get(0).onclick);
+				return clone;
+			};
+
 			while (repeat > 0) {
+
 				// Switch to only using appended clones
 				clones.push(this.normalize(clones.length / 2, true));
-				$(items[clones[clones.length - 1]][0]).clone(true).addClass('cloned').appendTo(this.$stage);
-                clones.push(this.normalize(items.length - 1 - (clones.length - 1) / 2, true));
-				$(items[clones[clones.length - 1]][0]).clone(true).addClass('cloned').prependTo(this.$stage);
+				cloneWithClickHandlers($(items[clones[clones.length - 1]][0])).appendTo(this.$stage);
+				clones.push(this.normalize(items.length - 1 - (clones.length - 1) / 2, true));
+  			cloneWithClickHandlers($(items[clones[clones.length - 1]][0])).prependTo(this.$stage);
+
 				repeat -= 1;
 			}
 			this._clones = clones;
@@ -1328,6 +1336,7 @@
 
 		content = this.prepare(content);
 
+
 		if (this._items.length === 0 || position === this._items.length) {
 			this._items.length === 0 && this.$stage.append(content);
 			this._items.length !== 0 && this._items[position - 1].after(content);
@@ -1608,6 +1617,7 @@
 	 */
 	Owl.prototype.pointer = function(event) {
 		var result = { x: null, y: null };
+
 
 		event = event.originalEvent || event || window.event;
 
